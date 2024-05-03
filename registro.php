@@ -3,10 +3,19 @@
 
   include './Funciones/cabecera.php';
   include './Objetos/usuario.php';
-  include './Objetos/usuarioDB.php';
+
 
   if(isset($_POST["submit"])){
     $usuario = new usuario();
+
+    $name = $_POST["name"];
+    $email = $_POST["email"];
+    $password = hash('sha256', $_POST["password"]);
+    $description = $_POST["description"];
+    $image = file_get_contents($_FILES["image"]["tmp_name"]);
+
+    $usuario->nuevoUsuario($name, $email, $password, $description, $image);
+
   }
 ?>
 <html>
@@ -22,7 +31,7 @@
       ?>
     </header>
     <main>
-      <form class="formulario" action="" method="post">
+      <form class="formulario" action="" enctype="multipart/form-data" method="post">
         <div>
           <label for="name">Nombre:</label>
           <input type="text" name="name" id="name">
@@ -47,8 +56,6 @@
           <label for="image">Imagen de perfil:</label>
           <input type="file" name="image" id="image" accept="image/*">
         </div>
-
-        <img src="Imagenes/Default_User.webp">
 
         <div>
           <input type="submit" name="submit" value="Registrarse" class="submit">
