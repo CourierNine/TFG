@@ -2,10 +2,8 @@
 
 <?php
   include './Funciones/cabecera.php';
-
-
-  if(isset($_POST["submit"])){
-  }
+  include './Funciones/pie.php';
+  include './Objetos/usuario.php';
 ?>
 <html>
   <head>
@@ -19,5 +17,10 @@
         cabecera(True);
       ?>
     </header>
+    <footer>
+      <?php
+        pie();
+      ?>
+    </footer>
   </body>
 </html>

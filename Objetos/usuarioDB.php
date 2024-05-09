@@ -40,7 +40,7 @@
       }
     }
 
-    function contarUsuarios(){
+    function contarUsuariosDB(){
       $query = 'SELECT COUNT(*) FROM Usuario';
       $res = $this->conn->query($query);
 
@@ -48,6 +48,62 @@
 
       return $count;
     }
+
+    function loginDB($email, $password){
+      $query = 'SELECT user_id, name, type, image FROM Usuario WHERE email=:email AND password=:password';
+
+      $prepared = $this->conn->prepare($query);
+
+      $prepared->bindParam(':email', $emailReady);
+      $prepared->bindParam(':password', $passwordReady);
+
+      $emailReady = $email;
+      $passwordReady = $password;
+
+      $prepared->execute();
+
+      $result = $prepared->fetch();
+
+      return $result;
+    }
+
+    function getDatosDB($id){
+      $query = 'SELECT name, email, description, type, participations, wins, image FROM Usuario WHERE user_id=:id';
+
+      $prepared = $this->conn->prepare($query);
+
+      $prepared->bindParam(':id', $idReady);
+
+      $idReady = $id;
+
+      $prepared->execute();
+
+      $result = $prepared->fetch();
+
+      return $result;
+    }
+
+    function editarUsuarioDB($id, $name, $email, $description, $image){
+      $query = 'UPDATE Usuario SET name=:name, email=:email, description=:description, image=:image WHERE user_id=:id';
+
+      $prepared = $this->conn->prepare($query);
+
+      $prepared->bindParam(':id', $idReady);
+      $prepared->bindParam(':name', $nameReady);
+      $prepared->bindParam(':email', $emailReady);
+      $prepared->bindParam(':description', $descriptionReady);
+      $prepared->bindParam(':image', $imageReady);
+
+      $idReady = $id;
+      $nameReady = $name;
+      $emailReady = $email;
+      $descriptionReady = $description;
+      $imageReady = $image;
+
+      $prepared->execute();
+    }
   }
+
+
 
  ?>

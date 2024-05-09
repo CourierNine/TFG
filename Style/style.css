@@ -7,22 +7,22 @@ header h1{
   text-align: center;
 }
 
-menu{
+menu, footer{
   display: flex;
   flex-direction: row;
   padding: 10px;
 }
 
-menu ul{
+menu ul, footer ul{
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   font-size: 0.8em;
-  margin-left: auto;
   margin-right: auto;
+  margin-left: 15px;
 }
 
-menu ul li{
+menu ul li, footer ul li{
   list-style-type: none;
   margin: 10px;
   padding: 5px;
@@ -64,10 +64,10 @@ menu ul li{
 .formulario img{
   border-radius: 25px;
   width: 200px;
-  margin: 5px;
+  margin: 20px;
 }
 
-main .formulario{
+main .formulario, main .perfil{
   width: 50%;
   margin: auto;
 }
@@ -93,4 +93,68 @@ label+input+textarea{
 .submit{
   margin: 10px;
   margin-left: auto;
+}
+
+.miniUsuario{
+  background-color: #C044EE;
+  border-radius: 25px;
+  padding: 10px;
+}
+
+.miniUsuario .imagenEnlace{
+  width: 200px;
+  border-radius: 25px;
+  border: solid 3px transparent;
+}
+
+.miniUsuario .imagenEnlace:hover{
+  border: solid 3px #019fb6;
+}
+
+
+.miniUsuario p{
+  text-align: center;
+}
+
+.miniUsuario button{
+  margin-left: auto;
+}
+
+.miniUsuario div{
+  display: flex;
+  flex-direction: column;
+}
+
+.boton{
+  float: left;
+  margin: 5px;
+}
+
+main{
+  background-color: #C044EE;
+  border-radius: 25px;
+}
+
+.perfil{
+  padding: 10px;
+}
+
+.perfil .imagenPerfil{
+  width: 400px;
+  border-radius: 25px;
+
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.perfil .resumenUsuario{
+  border: 1px dotted black;
+  border-radius: 25px;
+  padding: 10px;
+  margin-top: 10px;
+}
+
+.perfil p{
+  text-align: justify;
 }
