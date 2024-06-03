@@ -22,7 +22,7 @@
   <body>
     <header>
       <?php
-        cabecera(True);
+        cabecera(True, False);
       ?>
     </header>
     <main>

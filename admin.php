@@ -14,9 +14,11 @@
   <body>
     <header>
       <?php
-        cabecera(True, False);
+        cabecera(True, True);
       ?>
     </header>
+    <main>
+    </main>
     <footer>
       <?php
         pie();

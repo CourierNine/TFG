@@ -72,7 +72,7 @@
   <body>
     <header>
       <?php
-        cabecera($cabecera);
+        cabecera($cabecera, False);
       ?>
     </header>
     <main>

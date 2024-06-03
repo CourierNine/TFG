@@ -7,13 +7,13 @@ header h1{
   text-align: center;
 }
 
-menu, footer{
+menu, footer, .adminMenu{
   display: flex;
   flex-direction: row;
   padding: 10px;
 }
 
-menu ul, footer ul{
+menu ul, footer ul, .adminMenu ul{
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -22,7 +22,7 @@ menu ul, footer ul{
   margin-left: 15px;
 }
 
-menu ul li, footer ul li{
+menu ul li, footer ul li, .adminMenu ul li{
   list-style-type: none;
   margin: 10px;
   padding: 5px;
