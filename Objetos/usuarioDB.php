@@ -1,16 +1,14 @@
 <?php
-  include './Funciones/connect.php';
-
   class usuarioDB{
     private $conn;
 
-    function __construct(){
-      $this->conn = connect();
+    function __construct($conn){
+      $this->conn = $conn;
     }
 
     function nuevoUsuarioDB($name, $email, $password, $description, $type, $participations, $wins, $image){
       try{
-        $query = 'INSERT INTO Usuario (name, password, email , description, type, participations, wins, image)
+        $query = 'INSERT INTO Usuario (name, password, email, description, type, participations, wins, image)
          VALUES(:name, :password, :email, :description, :type, :participations, :wins, :image)';
 
         $prepared = $this->conn->prepare($query);
@@ -50,7 +48,7 @@
     }
 
     function loginDB($email, $password){
-      $query = 'SELECT user_id, name, type, image FROM Usuario WHERE email=:email AND password=:password';
+      $query = 'SELECT * FROM Usuario WHERE email=:email AND password=:password';
 
       $prepared = $this->conn->prepare($query);
 
@@ -68,7 +66,7 @@
     }
 
     function getDatosDB($id){
-      $query = 'SELECT name, email, description, type, participations, wins, image FROM Usuario WHERE user_id=:id';
+      $query = 'SELECT * FROM Usuario WHERE user_id=:id';
 
       $prepared = $this->conn->prepare($query);
 
@@ -83,22 +81,46 @@
       return $result;
     }
 
-    function editarUsuarioDB($id, $name, $email, $description, $image){
-      $query = 'UPDATE Usuario SET name=:name, email=:email, description=:description, image=:image WHERE user_id=:id';
+    function getTodosDatosDB(){
+      $query = 'SELECT * FROM Usuario';
+
+      $prepared = $this->conn->prepare($query);
+
+      $prepared->execute();
+
+      $result = $prepared->fetchAll();
+
+      return $result;
+    }
+
+    function editarUsuarioDB($id, $name, $description, $type, $image){
+      $query = 'UPDATE Usuario SET name=:name, description=:description, type=:type, image=:image WHERE user_id=:id';
+
+      $prepared = $this->conn->prepare($query);
+
+      $prepared->bindParam(':name', $nameReady);
+      $prepared->bindParam(':id', $idReady);
+      $prepared->bindParam(':type', $typeReady);
+      $prepared->bindParam(':description', $descriptionReady);
+      $prepared->bindParam(':image', $imageReady);
+
+      $nameReady = $name;
+      $idReady = $id;
+      $typeReady = $type;
+      $descriptionReady = $description;
+      $imageReady = $image;
+
+      $prepared->execute();
+    }
+
+    function borrarUsuarioDB($id){
+      $query = 'DELETE FROM Usuario WHERE user_id=:id';
 
       $prepared = $this->conn->prepare($query);
 
       $prepared->bindParam(':id', $idReady);
-      $prepared->bindParam(':name', $nameReady);
-      $prepared->bindParam(':email', $emailReady);
-      $prepared->bindParam(':description', $descriptionReady);
-      $prepared->bindParam(':image', $imageReady);
 
       $idReady = $id;
-      $nameReady = $name;
-      $emailReady = $email;
-      $descriptionReady = $description;
-      $imageReady = $image;
 
       $prepared->execute();
     }

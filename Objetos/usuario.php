@@ -4,12 +4,20 @@
   class usuario{
     private $DB;
 
-    function __construct(){
-      $this->DB = new usuarioDB();
+    function __construct($conn){
+      $this->DB = new usuarioDB($conn);
+    }
+
+    function contarUsuarios(){
+      $count = $this->DB->contarUsuariosDB();
+
+      return $count;
     }
 
     function nuevoUsuario($name, $email, $password, $description, $image){
-      $count = $this->DB->contarUsuariosDB();
+      $count = $this->contarUsuarios();
+
+
 
       if($count==0){
         $type = "Admin";
@@ -22,6 +30,10 @@
       $wins  = 0;
 
       $this->DB->nuevoUsuarioDB($name, $email, $password, $description, $type, $participations, $wins,$image);
+
+      $this->login($email, $password);
+
+      header("Location: ../index.php");
     }
 
     function login($email, $password){
@@ -32,13 +44,18 @@
         $type = $result["type"];
         $image = $result["image"];
         $id = $result["user_id"];
+        $email = trim($result["email"]);
+
 
         session_start();
         $_SESSION["name"] = $name;
+        $_SESSION["email"] = $email;
         $_SESSION["id"] = $id;
         $_SESSION["type"] = $type;
         $_SESSION["image"] = $image;
       }
+
+      header("Location: ../index.php");
     }
 
     function getDatos($id){
@@ -48,8 +65,14 @@
       return $result;
     }
 
-    function editarUsuario($id, $name, $email, $description, $image){
-      $this->DB->editarUsuarioDB($id, $name, $email, $description, $image);
+    function getTodosDatos(){
+      $result = $this->DB->getTodosDatosDB();
+
+      return $result;
+    }
+
+    function editarUsuario($id, $name, $description, $type, $image){
+      $this->DB->editarUsuarioDB($id, $name, $description, $type, $image);
 
       if($_SESSION["id"]==$id){
         session_start();
@@ -57,7 +80,13 @@
         $_SESSION["image"] = $image;
       }
 
-      header("Location: perfil.php");
+      header("Location: ../index.php");
+    }
+
+    function borrarUsuario($id){
+      $this->DB->borrarUsuarioDB($id);
+
+      header("Location: ../listaUsuarios.php");
     }
 
     function cerrar(){

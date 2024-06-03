@@ -22,10 +22,15 @@ menu ul, footer ul, .adminMenu ul{
   margin-left: 15px;
 }
 
+.adminMenu ul{
+  height: 100px;
+}
+
 menu ul li, footer ul li, .adminMenu ul li{
   list-style-type: none;
-  margin: 10px;
+  margin: 5px;
   padding: 5px;
+  height: 100px;
 }
 
 .menuBoton{
@@ -67,7 +72,7 @@ menu ul li, footer ul li, .adminMenu ul li{
   margin: 20px;
 }
 
-main .formulario, main .perfil{
+main .formulario, main .perfil, main .perfilFoto{
   width: 50%;
   margin: auto;
 }
@@ -101,13 +106,17 @@ label+input+textarea{
   padding: 10px;
 }
 
-.miniUsuario .imagenEnlace{
+.imagenEnlace{
   width: 200px;
   border-radius: 25px;
   border: solid 3px transparent;
 }
 
-.miniUsuario .imagenEnlace:hover{
+.imagenEnlace, .imagenPerfil, .imagenGaleria{
+  border: solid 3px transparent;
+}
+
+.imagenEnlace:hover, form .imagenPerfil:hover, .imagenGaleria:hover{
   border: solid 3px #019fb6;
 }
 
@@ -130,16 +139,16 @@ label+input+textarea{
   margin: 5px;
 }
 
-main{
-  background-color: #C044EE;
-  border-radius: 25px;
-}
-
-.perfil{
+.perfil, .perfilFoto{
   padding: 10px;
 }
 
-.perfil .imagenPerfil{
+.perfilFoto div:first-of-type{
+  display: flex;
+  flex-direction: row;
+}
+
+.perfil .imagenPerfil, .perfilFoto .imagenPerfil{
   width: 400px;
   border-radius: 25px;
 
@@ -148,13 +157,133 @@ main{
   margin-right: auto;
 }
 
-.perfil .resumenUsuario{
+.resumenUsuario, .listaUsuarios{
   border: 1px dotted black;
   border-radius: 25px;
   padding: 10px;
   margin-top: 10px;
+  background-color: #C044EE;
 }
 
-.perfil p{
+.resumenUsuario div{
+  display: flex;
+  flex-direction: row;
+}
+
+.resumenUsuario div form{
+  margin: 10px;
+}
+
+.listaUsuarios{
+  display: flex;
+  flex-direction: row;
+}
+
+.listaUsuarios div:last-of-type{
+  margin-left: auto;
+}
+
+.listaUsuarios div{
+  margin: 15px;
+  margin: auto;
+  width: 25%;
+}
+
+.imagenPerfil{
+  border-radius: 25px;
+  background-color: lightgray;
+}
+
+.listaUsuarios .imagenPerfil{
+  width: 100px;
+}
+
+.concursoDestacado .imagenPerfil{
+  margin: 10px;
+  width: 500px;
+}
+
+.perfil p, .perfilFoto p, .listaUsuarios div p{
   text-align: justify;
+}
+
+.concursoDestacado{
+  background-color: #C044EE;
+  border-radius: 25px;
+
+  display: flex;
+  flex-direction: row;
+}
+
+.subirFoto{
+  background-color: #C044EE;
+  border-color: black;
+  border-radius: 25px;
+  margin-left: 50px;
+}
+
+.galeria{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+
+}
+
+.galeria div{
+  margin: auto;
+  width: 30%;
+
+}
+
+.galeria div div{
+  background-color: #C044EE;
+  border-radius: 25px;
+  margin-left: 100px;
+  text-align: center;
+
+}
+
+.imagenGaleria{
+  border-radius: 25px;
+  margin: 10px;
+  width: 300px;
+}
+
+.botonEnlace{
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: arial, sans-serif;
+  cursor: pointer;
+  text-decoration: underline;
+  color: blue;
+  font-size: 1em;
+}
+
+.labelEnlace{
+  width: 85px;
+}
+
+.ganador{
+  text-decoration: underline;
+}
+
+.nuevoComentario{
+  margin: auto;
+  width: 50%;
+  margin: 10px;
+}
+
+.error{
+  color: blue;
+  font-size: 0.9em;
+  text-align: center;
+}
+
+.adminFotos{
+  display: flex;
+  flex-direction: row;
+  margin: auto;
+  width: 50%;
 }
