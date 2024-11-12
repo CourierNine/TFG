@@ -6,19 +6,23 @@
   include './Objetos/usuario.php';
   include './Funciones/connect.php';
 
+  //Establece conexión con la BD
   $conn = connect();
 
+  //Se declara una sesión
   session_start();
 
-  $usuario = new usuario($conn);
+  $usuario = new usuario($conn);  //Se crea una instancia del objeto Usuario
 
-  $id= $_POST["id"];
+  $id= $_POST["id"];  //Identificador de usuario
 
+  //Se obtienen los datos del usuario correspondiente al identificador
   $datos = $usuario->getDatos($id);
 
+  //Si se pulsa el botón de borrar
   if(isset($_POST["delete"])){
-    $id = $_POST["id"];
 
+    //Se elimina el usuario correspondiente al identificador
     $usuario->borrarUsuario($id);
   }
 ?>
@@ -32,17 +36,21 @@
   <body>
     <header>
       <?php
+        //Cabecera de la web
         cabecera(True, $conn);
       ?>
     </header>
     <main>
       <div class="perfil">
         <?php
-          echo '<img src="data:image/jpeg;base64,' . base64_encode($datos["image"]) . '" class="imagenPerfil"/>';
+          //Se codifica y muestra la imagen
+          echo '<img src="data:image/jpeg;base64,'
+            . base64_encode($datos["image"]) . '" class="imagenPerfil"/>';
         ?>
 
         <div class="resumenUsuario">
           <?php
+            //Se muestran el resto de datos
             echo '<p><em><b>Nombre:</b></em> ' . $datos["name"] . '<p>';
 
             echo '<p><em><b>Email:</b></em> ' . $datos["email"] . '<p>';
@@ -53,8 +61,10 @@
 
             echo '<p><em><b>Nº Concursos:</b></em> ' . $datos["participations"] . '<p>';
 
-            echo '<p><em><b>Nº Concursos Ganados:</b></em> ' . $datos["participations"] . '<p>';
+            echo '<p><em><b>Nº Concursos Ganados:</b></em> ' . $datos["wins"] . '<p>';
 
+            /*Si se detecta que el usuario es el propietario del perfil o administrador
+              se desbloquean botones para borrar o editar el usuario*/
             if($_SESSION["type"]=="Admin" || $_SESSION["id"] == $datos["user_id"]){
               echo '<div>
                       <form action="registro.php" method="post">
@@ -74,6 +84,7 @@
     </main>
     <footer>
       <?php
+      //Pie de la web
         pie();
       ?>
     </footer>

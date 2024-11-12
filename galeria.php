@@ -10,6 +10,7 @@
 
   $conn = connect();
 
+  //Se establece una sesión
   session_start();
 
   $foto = new foto($conn);
@@ -21,18 +22,22 @@
   $filtroVotos = false;
   $filtroConcursos = false;
 
+  //Se obtienen los datos de todas las fotos
   $datos = $foto->getTodosDatos();
 
+  //Se obtienen los datos de todos los concursos
   $datosConcursos = $concurso->getTodosDatos();
 
+  //Si se filtra la galeria
   if(isset($_POST["filter"])){
-    $contestFilter = $_POST["contestFilter"];
+    $contestFilter = htmlspecialchars($_POST["contestFilter"]);
 
     if($_POST["contestFilter"]!="empty"){
       $filtroConcursos = true;
     }
   }
 
+  //Si se quiere resetear el filtro, se recarga la página
   if(isset($_POST["reset"])){
     header("Location: galeria.php");
   }
@@ -47,6 +52,7 @@
   <body>
     <header>
       <?php
+        //Se muestra la cabecera
         cabecera(True, $conn);
       ?>
     </header>
@@ -69,7 +75,8 @@
             <div>
               <label for="votesFilter">Número de votos: </label>
               <?php
-                echo '<input type="number" min="0" name="votesFilter" value="' . $votesFilter .'">';
+                echo '<input type="number" min="0" name="votesFilter" value="'
+                . $votesFilter .'">';
               ?>
 
             </div>
@@ -78,6 +85,7 @@
               <select name="contestFilter">
                 <option value="empty" <?php if($contestFilter=="empty") echo 'selected'; ?>>No filtrar</option>
                 <?php
+                  //Se obtienen todos los concursos y se muestran como opciones para filtrar
                   for($i=0; $i<sizeof($datosConcursos); $i++){
                     echo '<option value="' . $datosConcursos[$i]["name"] .'"';
                     if($contestFilter==$datosConcursos[$i]["name"]) echo 'selected';
@@ -100,23 +108,27 @@
         <?php
           echo '<div class="galeria">';
             for($i=0; $i<sizeof($datos); $i++){
+              //Si se ha filtrado por concursos
               if($filtroConcursos){
+                //Se obtienen los datos del concurso por el que se ha filtrado
                 $unConcurso = $concurso->getDatos($datos[$i]["contest"]);
                 $nombreConcurso = $unConcurso["name"];
               }
 
-              if((($_POST["nameFilter"] =="") || ($_POST["nameFilter"]==$datos[$i]["name"]))
+              //Filtro por nombre, autor, votos y concurso
+              if((($_POST["nameFilter"] =="") || (str_contains(strtolower($_POST["nameFilter"]), strtolower($datos[$i]["name"]))))
                     && (($_POST["authorFilter"] =="") || ($_POST["authorFilter"]==$datos[$i]["author"]))
                     && (($_POST["votesFilter"] =="") || ($_POST["votesFilter"]==$datos[$i]["votes"]))
                     && (($_POST["contestFilter"] =="empty") || $_POST["contestFilter"]==$nombreConcurso)){
                 echo '<div>
                         <form action="perfilFoto.php" method="post">
-                          <input type="image" src="data:image/jpeg;base64,' . base64_encode($datos[$i]["image"]) . '" class="imagenGaleria"/>
+                          <input class="imagenGaleria" type="image" src="data:image/jpeg;base64,' . base64_encode($datos[$i]["image"]) . '" class="imagenGaleria"/>
                           <input type="hidden" name="id" value="' . $datos[$i]["photo_id"] . '"/>
                         </form>
 
-                        <div>
-                          <p><b><em>' . $datos[$i]["name"] .' </b></em>
+                        <div class="resumenFoto">
+                          <p class="tituloFoto"><b><em>' . $datos[$i]["name"] .' </b></em></p>
+                          <p class="tituloFoto"><b><em>Votos:</b></em> ' . $datos[$i]["votes"] .'</p>
                         </div>
                       </div>';
               }
@@ -125,6 +137,7 @@
     </main>
     <footer>
       <?php
+        //Se muestra el pie de la página
         pie();
       ?>
     </footer>

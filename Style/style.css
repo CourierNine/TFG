@@ -1,10 +1,18 @@
 
 body{
   background-color: #b015ea;
+  background-image: url('../Imagenes/back.jpg');
 }
+
 
 header h1{
   text-align: center;
+  border: solid;
+  border-width: 2px;
+  border-color: white;
+  padding: 10px;
+
+  background-color: #C044EE;
 }
 
 menu, footer, .adminMenu{
@@ -47,7 +55,7 @@ menu ul li, footer ul li, .adminMenu ul li{
 }
 
 .menuBoton:hover{
-  border: solid 2px black;
+  border: solid 2px white;
 }
 
 .formulario{
@@ -120,6 +128,12 @@ label+input+textarea{
   border: solid 3px #019fb6;
 }
 
+.imagenGaleria{
+  padding: 10px;
+  background-color: #C044EE;
+  width: 250px;
+  margin: 50px;
+}
 
 .miniUsuario p{
   text-align: center;
@@ -157,8 +171,12 @@ label+input+textarea{
   margin-right: auto;
 }
 
+b{
+  text-decoration: underline;
+}
+
 .resumenUsuario, .listaUsuarios{
-  border: 1px dotted black;
+  border: 2px dotted white;
   border-radius: 25px;
   padding: 10px;
   margin-top: 10px;
@@ -199,8 +217,9 @@ label+input+textarea{
 }
 
 .concursoDestacado .imagenPerfil{
-  margin: 10px;
+  margin: 25px;
   width: 500px;
+  height: 250px;
 }
 
 .perfil p, .perfilFoto p, .listaUsuarios div p{
@@ -213,13 +232,19 @@ label+input+textarea{
 
   display: flex;
   flex-direction: row;
+
+
+  margin:20px;
+  margin-left: 0px;
+  margin-right: 0px;
 }
 
 .subirFoto{
   background-color: #C044EE;
   border-color: black;
   border-radius: 25px;
-  margin-left: 50px;
+  margin-left: 500px;
+  margin-bottom: 10px;
 }
 
 .galeria{
@@ -286,4 +311,99 @@ label+input+textarea{
   flex-direction: row;
   margin: auto;
   width: 50%;
+}
+
+.containerPlagio{
+  background-color: #C044EE;
+  border-radius: 25px;
+  margin: 20px;
+  padding: 10px;
+}
+
+.plagio{
+  color: blue;
+  text-align: center;
+}
+
+.parrafoPlagio{
+  text-align: center;
+}
+
+.tituloFoto{
+  padding: 10px;
+}
+
+.politica{
+  background-color: #C044EE;
+  border-radius: 25px;
+  margin: 20px;
+  padding: 10px;
+}
+
+h3{
+  margin: 20px;
+}
+
+
+
+.politica h3{
+  color: white;
+  border-style: dotted;
+  border-width: 2px;
+  border-radius: 25px;
+  padding: 10px;
+  text-align: center;
+}
+
+
+.concursoDestacado{
+  display: none;
+  transition: flex 4s;
+}
+
+.concursoDestacado.active{
+  display: flex;
+  flex-direction: row;
+}
+
+.botonDestacado{
+  height: 50px;
+  width: 30px;
+  margin: 50px;
+  margin-top: 125px;
+}
+
+.resumenDestacado{
+  border: solid;
+  border-radius: 25px;
+  border-color: white;
+  border-style: dotted;
+  padding: 10px;
+  margin: 5px;
+  background-color: orchid;
+}
+
+.resumenPage{
+  background-color: orchid;
+  border-radius: 25px;
+  text-align: center;
+}
+
+.resumenFoto{
+    border: solid;
+    border-radius: 25px;
+    border-color: white;
+    border-style: dotted;
+    background-color: orchid;
+
+    height: 150px;
+}
+
+.imagenGaleria{
+  height: 200px;
+  width: 300px;
+}
+
+.ganador, .noGanador{
+  padding: 5px;
 }

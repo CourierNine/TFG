@@ -6,19 +6,23 @@
   include './Objetos/usuario.php';
   include './Objetos/foto.php';
   include './Objetos/concurso.php';
+  include './Objetos/voto.php';
   include './Objetos/comentario.php';
   include './Funciones/connect.php';
 
 
   $conn = connect();
 
+  //Se establece una sesión
   session_start();
 
   $concurso = new concurso($conn);
   $foto = new foto($conn);
   $comentario = new comentario($conn);
   $usuario = new Usuario($conn);
+  $voto = new Voto($conn);
 
+  //Se obtiene el identificador de la foto
   if(isset($_POST["id"])){
     $id = $_POST["id"];
   }
@@ -26,12 +30,19 @@
     $id = $_GET["id"];
   }
 
+
+  //Se obtienen los datos de la foto
   $datos = $foto->getDatos($id);
 
+
+
+  //Se obtienen los datos del concurso al que pertenece la foto
   $datosConcurso = $concurso->getDatos($datos["contest"]);
 
-  $end_date = strtotime($datosConcurso["end_date"]);
 
+  $alreadyVoted = $voto->comprobarVoto($datosConcurso["contest_id"], $_SESSION["id"]);
+
+  //Se establece un nuevo voto
   if(isset($_POST["newVote"])){
 
     setcookie($datos["contest"], "alreadyVoted", $end_date);
@@ -41,30 +52,40 @@
     header("Location: galeria.php");
   }
 
+  //Se crea un nuevo comentario
   if(isset($_POST["newComment"])){
-    $author = $_POST["author"];
-    $photo_id = $_POST["id"];
-    $comment = $_POST["comment"];
+    $author = htmlspecialchars($_POST["author"]);
+    $photo_id = htmlspecialchars($_POST["id"]);
+    $comment = htmlspecialchars($_POST["comment"]);
 
+    //Se obtiene la fecha actual
     $date = getDate();
     $dateString = $date["wday"] . "/" . $date["mon"] . "/" . $date["year"];
 
+    //Se sube el nuevo comentario al sistema
     $comentario->nuevoComentario($author, $photo_id, $dateString, $comment);
 
+    //Se recarga la página
     header("Location: perfilFoto.php?id=" . $photo_id);
   }
 
+  //Se borra el comentario seleccionado
   if(isset($_POST["deleteComment"])){
     $comment_id = $_POST["comment_id"];
     $comentario->borrarComentario($comment_id);
   }
 
+  //Se borra la foto indicada
   if(isset($_POST["deletePhoto"])){
     $photo_id = $_POST["id"];
+
+    //Se borran los comentarios de la foto
+    $comentario->borrarComentariosFoto($photo_id);
     $foto->borrarFoto($photo_id);
     header("Location: perfilConcurso.php?id=" . $datos["contest"]);
   }
 
+  //Se obtienen los datos de los comentarios de la foto
   $datosComentarios = $comentario->getComentariosFoto($id);
   ?>
 <html>
@@ -77,6 +98,7 @@
   <body>
     <header>
       <?php
+        //Se muestra la cabecera de la web
         cabecera(True, $conn);
       ?>
     </header>
@@ -84,9 +106,12 @@
       <div class="perfilFoto">
         <div>
         <?php
-          echo '<img src="data:image/jpeg;base64,' . base64_encode($datos["image"]) . '" class="imagenPerfil"/>';
+          //Se muestra la imagen
+          echo '<img src="data:image/jpeg;base64,' . base64_encode($datos["image"]) . '"
+          class="imagenPerfil"/>';
 
-          if((time() > $datosConcurso["end_date"]) && (time() < ($datosConcurso["end_date"] + 604800)) && !isset($_COOKIE[$datos["contest"]])){
+          //Si se esta en proceso de votación y el usuario aún no ha votado, se permite votar
+          if($datosConcurso["status"]=="Voting" && !$alreadyVoted && isset($_SESSION["id"])){
             echo '<form action="" method="post">
                     <input type="submit" name ="newVote" value="+++" class="boton"/>
                     <input type="hidden" name="id" value="' . $datos["photo_id"] . '"/>
@@ -97,7 +122,7 @@
 
         <div class="resumenUsuario">
           <?php
-
+            //Se muestra información de la imagen
             echo '<p><em><b>Nombre:</b></em> ' . $datos["name"] . '<p>';
 
             echo '<p><em><b>Autor:</b></em> ' . $datos["author"] . '<p>';
@@ -108,11 +133,14 @@
 
             echo '<form action="perfilConcurso.php" method="post">
                     <label for="contest" class="labelEnlace"><b><em>Concurso:</em></b></label>
-                    <input name="contest" type="submit" value="' . $datosConcurso["name"] .'" class="botonEnlace">
+                    <input name="contest" type="submit" value="' . $datosConcurso["name"] .'"
+                    class="botonEnlace">
                     <input type="hidden" name="id" value="' . $datosConcurso["contest_id"] . '">
                   </form>';
 
-            if($_SESSION["type"]=="Admin" && $datosConcurso["status"]!="Cerrado"){
+            /*Si el usuario es administrador y el concurso no esta cerrado ni
+            en proceso de votación se puede editar y borrar la foto*/
+            if($_SESSION["type"]=="Admin" && ($datosConcurso["status"]!="Cerrado" || $datosConcurso["status"]!="Voting")){
               echo '<div>
                       <form action="crearFoto.php" method="post">
                         <input type="hidden" name="id" value="' . $id . '">
@@ -129,12 +157,17 @@
          </div>
       </div>
         <?php
+          //Se recorren todos los comentarios pertenecientes a esta foto
           for($i=0; $i<sizeof($datosComentarios); $i++){
+            //Se obtienen los datos del usuario que ha realizado el comentario
             $datosUsuario = $usuario->getDatos($datosComentarios[$i]["author"]);
+
+
             echo '<div class="listaUsuarios">
-                    <div>
+                    <div class="imagenComentario">
                       <form action="perfil.php" method="post">
-                        <input type="image" src="data:image/jpeg;base64,' . base64_encode($datosUsuario["image"]) . '" class="imagenPerfil"/>
+                        <input type="image" src="data:image/jpeg;base64,'
+                         . base64_encode($datosUsuario["image"]) . '" class="imagenPerfil"/>
                         <input type="hidden" name="id" value="' . $datosUsuario["user_id"] . '">
                       </form>
                     </div>
@@ -148,7 +181,8 @@
                     if($_SESSION["type"] == "Admin" || $_SESSION["id"] == $datosUsuario["user_id"]){
                       echo '<div>
                         <form action="" method="post">
-                          <input type="hidden" name="comment_id" value="' . $datosComentarios[$i]["comment_id"] . '">
+                          <input type="hidden" name="comment_id" value="
+                          ' . $datosComentarios[$i]["comment_id"] . '">
                           <input type="hidden" name="id" value="' . $datos["photo_id"] . '">
                           <input type="submit" name="deleteComment" value="Borrar Comentario" class="boton">
                         </form>
@@ -158,20 +192,22 @@
           }
         ?>
       </div>
-      <div class="nuevoComentario">
-        <form action="" method="post" class="formulario">
-          <div>
-            <textarea name="comment" id="description"></textarea>
-          </div>
-          <div>
-            <?php
-              echo '<input type="hidden" name="author" value="' . $_SESSION["id"] .'">';
-              echo '<input type="hidden" name="id" value="' . $datos["photo_id"] .'">';
-            ?>
-              <input type="submit" name="newComment" value="Subir Opinión" class="submit">
-          </div>
-        </form>
-      </div>
+      <?php
+      if(isset($_SESSION["email"])){
+        echo '<div class="nuevoComentario">
+          <form action="" method="post" class="formulario">
+            <div>
+              <textarea name="comment" id="description"></textarea>
+            </div>
+            <div>
+                <input type="hidden" name="author" value="' . $_SESSION["id"] .'">
+                <input type="hidden" name="id" value="' . $datos["photo_id"] .'">
+                <input type="submit" name="newComment" value="Subir Opinión" class="submit">
+            </div>
+          </form>
+        </div>';
+      }
+      ?>
     </main>
     <footer>
       <?php

@@ -5,7 +5,7 @@ from apify_client import ApifyClient
 # Initialize the ApifyClient with your Apify API token
 
 client = ApifyClient("apify_api_aPIQkKHOv1UZeVM1Nh4aGxlbnRzsT40VBJfM")
-hashtag = "TFGMicro"
+hashtag = sys.argv[1]
 
 # Prepare the Actor input
 

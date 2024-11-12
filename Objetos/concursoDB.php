@@ -1,11 +1,14 @@
 <?php
+  //Clase que gestiona las operaciones sobre la tabla Concurso de la base de datos
   class concursoDB{
     private $conn;
 
+    //Se establece una conexión con la base de datos
     function __construct($conn){
       $this->conn = $conn;
     }
 
+    //Se crea una nueva tupla en la tabla con los parametros provistos
     function nuevoConcursoDB($name, $hashtag, $description, $end_date, $status, $image){
       try{
         $query = 'INSERT INTO Concurso (name, hashtag, description, status , end_date, image)
@@ -34,6 +37,7 @@
       }
     }
 
+    //Se obtienen los datos de un concurso con el identificador indicado
     function getDatosDB($id){
       $query = 'SELECT * FROM Concurso WHERE contest_id=:id';
 
@@ -50,6 +54,7 @@
       return $result;
     }
 
+    //Se obtienen los datos de todos las tuplas de la tabla
     function getTodosDatosDB(){
       $query = 'SELECT * FROM Concurso';
 
@@ -62,6 +67,8 @@
       return $result;
     }
 
+    /*Se obtienen los datos de la tupla con el mayor identificador
+      (correpondería a la más reciente)*/
     function getDestacadoDB(){
       $query = 'SELECT MAX(contest_id)FROM Concurso';
 
@@ -74,6 +81,7 @@
       return $result[0];
     }
 
+    //Se obtiene el número de tuplas presentes en la tabla
     function contarConcursosDB(){
       $query = 'SELECT COUNT(*) FROM Concurso';
       $res = $this->conn->query($query);
@@ -83,6 +91,7 @@
       return $count;
     }
 
+    //Se da un valor al atributo winner de la tupla
     function setGanadorDB($id, $winner){
       try{
         $query = 'UPDATE Concurso SET winner=:winner WHERE contest_id=:id';
@@ -102,6 +111,7 @@
 
     }
 
+    //Se borra una tupla correspondiente al parametro identificador
     function borrarConcursoDB($id){
       try{
         $query = 'DELETE FROM Concurso WHERE contest_id=:id';
@@ -119,6 +129,7 @@
       }
     }
 
+    //Se editan los datos de una tupla correspondiente al identificador
     function editarConcursoDB($id, $name, $end_date, $hashtag, $description, $image){
       try{
         $query = 'UPDATE Concurso SET name=:name, description=:description, end_date=:end_date, hashtag=:hashtag, image=:image WHERE contest_id=:id';
@@ -140,12 +151,14 @@
         $imageReady = $image;
 
         $prepared->execute();
+
       }
       catch(PDOException $e){
         echo "Error al editar el concurso: " . $e->getMessage();
       }
     }
 
+    //Se edita el parametro status de la tupla correspondiente al identificador
     function cambiarEstadoDB($id, $nuevoEstado){
       try{
         $query = 'UPDATE Concurso SET status=:status WHERE contest_id=:id';

@@ -16,11 +16,6 @@ function validarRegistro(){
     return false;
   }
 
-  if(!test){
-    alert("Por favor, introduzca un email valido.");
-    return false;
-  }
-
 
   return true;
 }
@@ -80,9 +75,8 @@ function validarFoto(){
   let author = document.forms["registroFoto"]["author"].value;
   let description = document.forms["registroFoto"]["description"].value;
 
-
   let nameSize = name.length;
-  let authorSize = hashtag.length;
+  let authorSize = author.length;
   let descriptionSize = description.length;
 
   if(name == ""){
@@ -125,10 +119,8 @@ function validarUsuario(){
   let password = document.forms["registroUsuario"]["password"].value;
   let description = document.forms["registroUsuario"]["description"].value;
   let expression = "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$";
-  let passwordExpression = "(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}";
 
   let test = email.match(expression);
-  let testPassword = password.match(passwordExpression);
 
   let nameSize = name.length;
   let emailSize = email.length;
@@ -162,11 +154,6 @@ function validarUsuario(){
 
   if(password == ""){
     alert("Por favor, introduzca una contraseña.");
-    return false;
-  }
-
-  if(!testPassword){
-    alert("La contraseña debe contener un número, una letra mayuscula, una letra minuscula y al menos 8 caracteres.");
     return false;
   }
 
